@@ -10,6 +10,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "serverless": "^3.34.0"
+    "@aws-sdk/client-dynamodb": "^3.405.0",
+    "@aws-sdk/util-dynamodb": "^3.405.0",
+    "dotenv": "^16.3.1",
+    "serverless": "^3.34.0",
+    "serverless-export-env": "^2.2.0"
   }
 }

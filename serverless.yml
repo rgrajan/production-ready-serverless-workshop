@@ -4,10 +4,19 @@ frameworkVersion: "3"
 
 custom:
   name: rajan
+  export-env:
+    overwrite:  true
 
 provider:
   name: aws
   runtime: nodejs18.x
+
+  iam:
+    role:
+      statements:
+        -Effct: Allow
+        Action: dynamodb:scan
+        Resource: !GetAtt RestaurantsTable.Arn
 
 functions:
   get-index:
@@ -16,3 +25,34 @@ functions:
       - http:
           path: /
           method: get
+
+  get-restaurants:
+    handler:  functions/get-restaurants.handler
+    events:
+      - http:
+          path: /restaurants
+          method: get
+    environment:
+      restaurants_table:  !Ref RestaurantsTable
+
+
+resources:
+  Resources:
+    RestaurantsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        BillingMode:  PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName:  name
+            AttributeType:  S
+        KeySchema:
+          - AttributeName:  name
+            KeyType:  HASH
+  Outputs:
+    RestaurantsTableName:
+      Value:  !Ref RestaurantsTable
+
+plugins:
+  - serverless-export-env
+
+
